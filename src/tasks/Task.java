@@ -1,5 +1,7 @@
+package tasks;
 
-import java.util.ArrayList;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -7,12 +9,32 @@ public class Task {
     private String description;
     private int id;
     private TaskStatus status;
+    private TaskType type;
+    protected Duration duration;
+    protected LocalDateTime startTime;
 
-    TaskManager manager = Managers.getDefault();
-
-    Task(String title, TaskStatus status) {
+    public Task(String title, TaskStatus status) {
         this.title = title;
         this.status = status;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (duration == null || startTime == null) {
+            return null;
+        } else {
+            return startTime.plus(duration);
+        }
+    }
+
+    public Duration getDuration() { return duration; }
+
+    public void setDuration(Duration duration) { this.duration = duration; }
+
+    public LocalDateTime getStartTime() { return startTime; }
+
+    public void setStartTime(LocalDateTime startTime, Duration duration) {
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public String getTitle() {
@@ -41,7 +63,9 @@ public class Task {
         this.status = taskStatus;
     }
 
+    public TaskType getType() { return type; }
 
+    public void setType(TaskType type) { this.type = type; }
 
     @Override
     public boolean equals(Object o) {
@@ -58,11 +82,13 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "tasks.Task{" +
                 " id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", taskStatus=" + status +
+                ", taskStatus=" + status + '\'' +
+                ", startTime=" + startTime + '\'' +
+                ", duration=" + duration +
                 "}";
     }
 }
