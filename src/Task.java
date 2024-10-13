@@ -8,8 +8,6 @@ public class Task {
     private int id;
     private TaskStatus status;
 
-    TaskManager manager = Managers.getDefault();
-
     Task(String title, TaskStatus status) {
         this.title = title;
         this.status = status;

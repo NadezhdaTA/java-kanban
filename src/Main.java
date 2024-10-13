@@ -3,7 +3,6 @@ public class Main {
     public static void main(String[] args) {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
-
         Task task1 = new Task("Совершить прогулку на закате", TaskStatus.NEW);
         taskManager.addTask(task1);
 
@@ -37,7 +36,7 @@ public class Main {
         taskManager.addSubtask(subtask6);
 
         Epic epic3 = new Epic("Вкрутить лампочку", TaskStatus.NEW);
-        epic3.setId(10);
+        epic3.setId(subtask6.getId());
         taskManager.addEpic(epic3);
 
         taskManager.getTaskById(2);
@@ -51,7 +50,6 @@ public class Main {
         taskManager.getSubtaskById(4);
 
         taskManager.getTaskById(1);
-
 
         System.out.println("Задачи:");
         for (Task task : taskManager.getTaskList()) {

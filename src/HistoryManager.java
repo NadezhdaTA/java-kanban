@@ -1,8 +1,8 @@
-import java.util.ArrayList;
+import java.util.List;
 
 public interface HistoryManager {
 
-    public void addHistory(Task task);
+    void addHistory(Task task);
 
-    public ArrayList<Task> getHistory();
+    List<Task> getHistory();
 }

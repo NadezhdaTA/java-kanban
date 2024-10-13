@@ -2,18 +2,18 @@
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 class InMemoryTaskManagerTest {
     Task task = new Task("Test addNewTask", TaskStatus.NEW);
     Epic epic = new Epic("Test addNewEpic", TaskStatus.NEW);
     Subtask subtask = new Subtask("Test addNewSubtask", TaskStatus.NEW, epic.getId());
 
-    HistoryManager historyManager = Managers.getDefaultHistory();
+    InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
     InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
     @Test
@@ -25,17 +25,16 @@ class InMemoryTaskManagerTest {
         assertNotNull(savedTask, "Задача найдена.");
         assertEquals(task, savedTask, "Задачи совпадают.");
 
-        final List<Task> tasks = taskManager.getTaskList();
+        final ArrayList<Task> tasks = taskManager.getTaskList();
 
         assertNotNull(tasks, "Задача найдена.");
         assertEquals(1, tasks.size(), "Верное количество задач.");
-        assertEquals(task, tasks.get(0), "Задачи совпадают.");
+        assertEquals(task, tasks.getFirst(), "Задачи совпадают.");
     }
 
     @Test
     void TaskEqualsTaskById() {
         taskManager.addTask(task);
-        final int taskId = task.getId();
 
         Task task1 = new Task("Test addNewTask", TaskStatus.NEW);
         taskManager.addTask(task);
@@ -47,7 +46,6 @@ class InMemoryTaskManagerTest {
     @Test
     void EpicEqualsEpicById() {
         taskManager.addEpic(epic);
-        final int epicId = epic.getId();
 
         Epic epic1 = new Epic("Test addNewEpic", TaskStatus.NEW);
         taskManager.addEpic(epic);
@@ -59,7 +57,6 @@ class InMemoryTaskManagerTest {
     @Test
     void SubtaskEqualsSubtaskById() {
         taskManager.addSubtask(subtask);
-        final int subtaskId = subtask.getId();
 
         Subtask subtask1 = new Subtask("Test addNewSubtask", TaskStatus.NEW, epic.getId());
         taskManager.addSubtask(subtask);
@@ -77,7 +74,7 @@ class InMemoryTaskManagerTest {
     void taskManagerNotNull(){
         TaskManager taskManager1 = Managers.getDefault();
 
-        ArrayList<Task> list = taskManager1.getTaskList();
+        List<Task> list = taskManager1.getTaskList();
 
         assertNotNull(taskManager1, "Объект класса существует.");
 
@@ -89,10 +86,12 @@ class InMemoryTaskManagerTest {
         taskManager.addEpic(epic);
 
         subtask = new Subtask("Test addNewEpic", TaskStatus.NEW, epic.getId());
+        subtask.setId(epic.getId());
 
         ArrayList<Subtask> subtasks = taskManager.getSubtasksOfEpic(epic.getId());
 
         int arrayListSize = subtasks.size();
+
         taskManager.addSubtask(subtask);
 
         ArrayList<Subtask> subtasks1 = taskManager.getSubtasksOfEpic(epic.getId());
@@ -102,29 +101,11 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void SubtaskShouldNotBeAddedAsEpicInTheSameEpic() {
-        subtask = new Subtask("Test addNewSubtask", TaskStatus.NEW, 10);
-        taskManager.addSubtask(subtask);
-
-        ArrayList<Epic> epics = taskManager.getEpicList();
-        int arrayListSize = epics.size();
-
-        Epic epic1 = new Epic("Test addNewSubtask", TaskStatus.NEW);
-
-        taskManager.addEpic(epic1);
-        ArrayList<Epic> epics1 = taskManager.getEpicList();
-
-        int arrayListSize1 = epics1.size();
-
-        assertEquals(arrayListSize, arrayListSize1);
-    }
-
-    @Test
     void addHistory() {
         taskManager.addTask(task);
         historyManager.addHistory(task);
 
-        final List<Task> history = historyManager.getHistory();
+        final ArrayList<Task> history = historyManager.getHistory();
 
         assertNotNull(history, "История не пустая.");
         assertEquals(1, history.size(), "История не пустая.");

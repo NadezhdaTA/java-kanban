@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Task> tasks = new HashMap<>();
@@ -7,7 +8,7 @@ public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
     private int nextId = 1;
 
-    HistoryManager memory = Managers.getDefaultHistory();
+    private HistoryManager memory = Managers.getDefaultHistory();
 
     @Override
     public void addTask(Task task) {
@@ -17,25 +18,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<Task> getTaskList() {
-        ArrayList<Task> taskArrayList = new ArrayList<>(tasks.values());
-        return taskArrayList;
+        return new ArrayList<>(tasks.values());
     }
 
     @Override
     public Task getTaskById(int id) {
-        Task task = null;
-        for (Task task1 : tasks.values()) {
-            if(task1.getId() == id) {
-                task = task1;
-            }
-        }
+        Task task = tasks.get(id);
         memory.addHistory(task);
         return task;
     }
 
     @Override
     public void updateTask(Task task, int taskId) {
-            tasks.put(taskId, task);
+        tasks.put(taskId, task);
     }
 
     @Override
@@ -49,26 +44,18 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
-
     @Override
     public void addEpic(Epic epic) {
-        for (Subtask subtask : subtasks.values()) {
-            if(epic.getTitle().equals(subtask.getTitle())){
-                System.out.println("Подзадача " + "'" + subtask.getTitle() + "'" + " не может стать эпиком.");
-                return;
-            }
-        }
-        epic.setId(nextId++);
-        epics.put(epic.getId(), epic);
+        epic.setId(nextId++); //убрала проверку id эпика и подзадачи, поскольку такая проверка происходит при добавлении подзадачи, и
+        epics.put(epic.getId(), epic);// если id совпадают, то такую подзадачу мы добавить не можем, не говоря уже том, чтобы сделать ее эпиком
         updateEpicStatus(epic);
-
     }
 
     @Override
     public ArrayList<Epic> getEpicList() {
         ArrayList<Epic> epicList = new ArrayList<>();
         for (Integer i : epics.keySet()) {
-            Epic epic= epics.get(i);
+            Epic epic = epics.get(i);
             epicList.add(epic);
         }
         return epicList;
@@ -96,8 +83,10 @@ public class InMemoryTaskManager implements TaskManager {
         int count_NEW = 0;
         int count_IN_PROGRESS = 0;
         int count_DONE = 0;
+
         for (Integer subtaskId : epic.getSubtaskIds()) {
             Subtask subtask = subtasks.get(subtaskId);
+
             switch (subtask.getStatus()) {
                 case NEW:
                     count_NEW++;
@@ -110,6 +99,7 @@ public class InMemoryTaskManager implements TaskManager {
                     break;
             }
         }
+
         if (count_NEW == epic.getSubtaskIds().size()) {
             epic.setStatus(TaskStatus.NEW);
         } else if (count_DONE == epic.getSubtaskIds().size()) {
@@ -121,12 +111,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpicById(int id) {
-        Epic epic = null;
-        for (Epic epic1 : epics.values()) {
-            if(epic1.getId() == id) {
-                epic = epic1;
-            }
-        }
+        Epic epic = epics.get(id);
         memory.addHistory(epic);
         return epic;
     }
@@ -134,6 +119,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeEpicById(int id) {
         Epic epic = epics.remove(id);
+
         for (Integer subtaskId : epic.getSubtaskIds()) {
             subtasks.remove(subtaskId);
         }
@@ -148,22 +134,18 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addSubtask(Subtask subtask) {
-        if (epics.containsValue(epics.get(subtask.getEpicId()))) {
-            Epic epic = epics.get(subtask.getEpicId());
-            if (epic.getTitle().equals(subtask.getTitle())) {
-                System.out.println("Подзадача " + "'" + subtask.getTitle() + "'" + " не может быть добавлена в эпик, т.к. у эпика такое же название.");
-                return;
-            } else {
-                subtask.setId(nextId++);
-                subtasks.put(subtask.getId(), subtask);
-                epic = epics.get(subtask.getEpicId());
-                epic.getSubtaskIds().add(subtask.getId());
-                updateEpicStatus(epic);
-                return;
-            }
+        Epic epic = epics.get(subtask.getEpicId());
+        if (epic == null) {
+            return;
+        }
+        if (epic.getId() == subtask.getId()) {
+            System.out.println("Подзадача " + "'" + subtask.getTitle() + "'" + " не может быть добавлена в эпик, т.к. у них одиноковый id.");
+            return;
         } else {
             subtask.setId(nextId++);
             subtasks.put(subtask.getId(), subtask);
+            epic.setSubtaskId(subtask.getId());
+            updateEpicStatus(epic);
         }
     }
 
@@ -183,14 +165,10 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(subtask.getEpicId());
         updateEpicStatus(epic);
     }
+
     @Override
     public Subtask getSubtaskById(int id) {
-        Subtask subtask = null;
-        for (Subtask subtask1 : subtasks.values()) {
-            if(subtask1.getId() == id) {
-                subtask = subtask1;
-            }
-        }
+        Subtask subtask = subtasks.get(id);
         memory.addHistory(subtask);
         return subtask;
     }
@@ -208,6 +186,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         updateEpicStatus(epic);
     }
+
     @Override
     public void removeAllSubtasks() {
         subtasks.clear();
@@ -216,8 +195,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-   @Override
-   public ArrayList<Task> getHistory() {
+    @Override
+    public List<Task> getHistory() {
         return memory.getHistory();
     }
 
