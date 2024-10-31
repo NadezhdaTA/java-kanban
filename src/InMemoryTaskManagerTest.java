@@ -1,6 +1,9 @@
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 
 import org.junit.jupiter.api.Test;
 
@@ -66,12 +69,12 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void historyManagerNotNull(){
+    void historyManagerNotNull() {
         assertNotNull(historyManager, "Объект класса существует.");
     }
 
     @Test
-    void taskManagerNotNull(){
+    void taskManagerNotNull() {
         TaskManager taskManager1 = Managers.getDefault();
 
         List<Task> list = taskManager1.getTaskList();
@@ -112,34 +115,29 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void TaskShouldBetheSameInHistoryManager(){
-        historyManager.addHistory(task);
-        historyManager.addHistory(epic);
-        historyManager.addHistory(subtask);
-
-        ArrayList<Task> history = historyManager.getHistory();
-
-        assertEquals(3, history.size(), "История не пустая, содержит 3 элемента.");
-
-        Task task1 = new Task("Test addNewTask1", TaskStatus.IN_PROGRESS);
-        taskManager.updateTask(task1, task.getId());
+    void taskShouldBeAddedInHistoryAsTheyGet() {
+        taskManager.addTask(task);
         historyManager.addHistory(task);
 
-        Epic epic1 = new Epic("Test addNewEpic1", TaskStatus.IN_PROGRESS);
-        taskManager.updateEpic(epic1, epic.getId());
+        taskManager.addEpic(epic);
         historyManager.addHistory(epic);
 
-        Subtask subtask1 = new Subtask("Test addNewSubtask1", TaskStatus.DONE, epic.getId());
-        taskManager.updateSubtask(subtask1, subtask.getId());
+        taskManager.addSubtask(subtask);
         historyManager.addHistory(subtask);
 
-        ArrayList<Task> history1 = historyManager.getHistory();
+        historyManager.addHistory(epic);
 
-        assertEquals(6, history1.size(), "История пополнилась.");
+        final ArrayList<Task> history = historyManager.getHistory();
 
-        assertEquals(history.get(0), history1.get(0));
-        assertEquals(history.get(1), history1.get(1));
-        assertEquals(history.get(2), history1.get(2));
+        assertNotNull(history, "История не пустая.");
+
+        assertEquals(3, history.size(), "История насчитывает 3 элемента.");
+
+        assertEquals(history.getFirst(), task, "На первом месте стоит объект task.");
+
+        assertEquals(history.get(1), subtask, "На втором месте стоит объект subtask.");
+
+        assertEquals(history.get(2), epic, "На третьем месте стоит объект epic.");
     }
 
     @Test
@@ -147,16 +145,14 @@ class InMemoryTaskManagerTest {
         Task task = new Task("Test addNewTask", TaskStatus.NEW);
         task.setDescription("TaskDescription");
         taskManager.addTask(task);
-        task.setId(9);
 
         assertEquals(1, taskManager.getTaskList().size(), "История не пустая.");
 
-        Task task1 = taskManager.getTaskById(9);
+        Task task1 = taskManager.getTaskById(task.getId());
 
-        assertEquals("Test addNewTask", task1.getTitle());
-        assertEquals("TaskDescription", task1.getDescription());
-        assertEquals(9, task1.getId());
-
+        assertEquals("Test addNewTask", task1.getTitle(), "Заголовки совпадают.");
+        assertEquals("TaskDescription", task1.getDescription(), "Описание совпадают.");
+        assertEquals(task.getId(), task1.getId(), "Id совпадают.");
     }
 
     @Test
@@ -178,7 +174,142 @@ class InMemoryTaskManagerTest {
         assertEquals(task, task2, "Задачи одинаковые.");
 
         assertEquals(task1, task3, "Задачи одинаковые.");
+    }
+
+    @Test
+    void epicShouldNotHaveSubtaskId() {
+        taskManager.addEpic(epic);
+
+        Subtask subtask1 = new Subtask("Test addNewSubtask1", TaskStatus.NEW, epic.getId());
+        taskManager.addSubtask(subtask1);
+
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", TaskStatus.NEW, epic.getId());
+        taskManager.addSubtask(subtask2);
+
+        Subtask subtask3 = new Subtask("Test addNewSubtask3", TaskStatus.NEW, epic.getId());
+        taskManager.addSubtask(subtask3);
+
+        int count = epic.getSubtaskIds().size();
+
+        assertEquals(3, count);
+
+        taskManager.removeSubtaskById(subtask2.getId());
+
+        int count1 = epic.getSubtaskIds().size();
+
+        assertEquals(2, count1);
 
     }
+
+
+    @Test
+    void taskGetByIdTest() {
+        taskManager.addTask(task);
+
+        Task task1 = new Task("Test addNewTask1", TaskStatus.NEW);
+        Task task2 = new Task("Test addNewTask2", TaskStatus.NEW);
+
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+
+        Task testTask = taskManager.getTaskById(task1.getId());
+
+        assertEquals(task1, testTask, "Задачи одинаковые.");
+
+        assertEquals(task1.getId(), testTask.getId(), "Id задач одинаковые.");
+
+    }
+
+    @Test
+    void updateTaskTest() {
+        Task task1 = new Task("Test addNewTask1", TaskStatus.NEW);
+
+        taskManager.addTask(task1);
+
+        assertEquals(1, taskManager.getTaskList().size());
+
+        Task task2 = new Task("Test addNewTask2", TaskStatus.IN_PROGRESS);
+
+        taskManager.updateTask(task2, task1.getId());
+
+        assertEquals(task1.getId(), task2.getId(), "Id задач одинаковые.");
+
+        assertNotEquals(task1.getTitle(), task2.getTitle(), "Название задач разное.");
+
+        assertNotEquals(task1.getStatus(), task2.getStatus(), "Статус задач разный.");
+
+        assertEquals(1, taskManager.getTaskList().size(), "Размер списка прежний.");
+
+    }
+
+    @Test
+    void updateSubtaskTest() {
+        taskManager.addEpic(epic);
+
+        Subtask subtask1 = new Subtask("Test addNewSubtask1", TaskStatus.NEW, epic.getId());
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", TaskStatus.NEW, epic.getId());
+
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+
+        assertEquals(2, taskManager.getSubtaskList().size());
+
+        Subtask subtask3 = new Subtask("Test addNewSubtask3", TaskStatus.IN_PROGRESS, epic.getId());
+
+        taskManager.updateSubtask(subtask3, subtask1.getId());
+
+        assertEquals(2, taskManager.getSubtaskList().size());
+
+        assertEquals(subtask1.getId(), subtask3.getId());
+
+        assertNotEquals(subtask1.getTitle(), subtask3.getTitle());
+
+        assertNotEquals(subtask1.getStatus(), subtask3.getStatus());
+    }
+
+    @Test
+    void updateEpicTest() {
+        taskManager.addEpic(epic);
+
+        Epic epic1 = new Epic("Test addNewEpic1", TaskStatus.NEW);
+        Epic epic2 = new Epic("Test addNewEpic2", TaskStatus.NEW);
+
+        taskManager.addEpic(epic1);
+        taskManager.addEpic(epic2);
+
+        assertEquals(3, taskManager.getEpicList().size());
+
+        taskManager.updateEpic(epic2, epic.getId());
+
+        assertEquals(3, taskManager.getEpicList().size());
+
+        assertEquals(epic.getId(), epic2.getId());
+
+        assertNotEquals(epic.getTitle(), epic2.getTitle());
+
+    }
+
+    @Test
+    void setTitleTest() {
+        taskManager.addTask(task);
+
+        task.setTitle("NewTaskTitle");
+
+        assertNotEquals("Test addNewTask", "NewTaskTitle");
+
+        assertEquals("NewTaskTitle", task.getTitle());
+
+    }
+
+    @Test
+    void setDescriptionTest() {
+        assertNull(epic.getDescription());
+
+        epic.setDescription("SetDescriptionTest");
+
+        assertNotNull(epic.getDescription());
+
+    }
+
 
 }
