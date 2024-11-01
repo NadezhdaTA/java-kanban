@@ -1,6 +1,6 @@
 import java.util.Objects;
 
-public class Node<Task> {
+public class Node<T> {
     private Task task;
     private Node<Task> prev;
     private Node<Task> next;
@@ -11,9 +11,7 @@ public class Node<Task> {
         this.next = next;
     }
 
-    public Task getTask() {
-        return task;
-    }
+    public Task getTask() { return task; }
 
     public void setTask(Task task) { this.task = task; }
 
