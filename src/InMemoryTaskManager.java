@@ -30,24 +30,29 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task, int taskId) {
+        task.setId(taskId);
         tasks.put(taskId, task);
     }
 
     @Override
     public void removeTaskById(int id) {
+        memory.removeFromHistory(id);
         tasks.remove(id);
     }
 
     @Override
     public void removeAllTasks() {
+        for (Integer i : tasks.keySet()) {
+            memory.removeFromHistory(i);
+        }
         tasks.clear();
     }
 
 
     @Override
     public void addEpic(Epic epic) {
-        epic.setId(nextId++); //убрала проверку id эпика и подзадачи, поскольку такая проверка происходит при добавлении подзадачи, и
-        epics.put(epic.getId(), epic);// если id совпадают, то такую подзадачу мы добавить не можем, не говоря уже том, чтобы сделать ее эпиком
+        epic.setId(nextId++);
+        epics.put(epic.getId(), epic);
         updateEpicStatus(epic);
     }
 
@@ -75,6 +80,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic, int epicId) {
+        epic.setId(epicId);
         epics.put(epicId, epic);
         updateEpicStatus(epic);
     }
@@ -121,14 +127,23 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.remove(id);
 
         for (Integer subtaskId : epic.getSubtaskIds()) {
+            memory.removeFromHistory(subtaskId);
             subtasks.remove(subtaskId);
         }
+        memory.removeFromHistory(id);
         epics.remove(id);
     }
 
     @Override
     public void removeAllEpics() {
+        for (Integer i : subtasks.keySet()) {
+            memory.removeFromHistory(i);
+        }
         subtasks.clear();
+
+        for (Integer j : epics.keySet()) {
+            memory.removeFromHistory(j);
+        }
         epics.clear();
     }
 
@@ -139,7 +154,7 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
         if (epic.getId() == subtask.getId()) {
-            System.out.println("Подзадача " + "'" + subtask.getTitle() + "'" + " не может быть добавлена в эпик, т.к. у них одиноковый id.");
+            System.out.println("Подзадача " + "'" + subtask.getTitle() + "'" + " не может быть добавлена в эпик, т.к. у них одинаковый id.");
             return;
         } else {
             subtask.setId(nextId++);
@@ -161,6 +176,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask subtask, int subtaskId) {
+        subtask.setId(subtaskId);
         subtasks.put(subtask.getId(), subtask);
         Epic epic = epics.get(subtask.getEpicId());
         updateEpicStatus(epic);
@@ -175,9 +191,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeSubtaskById(int id) {
+        memory.removeFromHistory(id);
+
         Subtask subtask = subtasks.get(id);
         Epic epic = epics.get(subtask.getEpicId());
         subtasks.remove(id);
+
         ArrayList<Integer> subtaskIds = epic.getSubtaskIds();
         for (Integer subtaskId : subtaskIds) {
             if (subtaskId == id) {
@@ -189,7 +208,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllSubtasks() {
+        for (Integer i : subtasks.keySet()) {
+            memory.removeFromHistory(i);
+        }
         subtasks.clear();
+
         for (Epic epic : epics.values()) {
             updateEpicStatus(epic);
         }

@@ -1,5 +1,3 @@
-
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class Task {
@@ -29,6 +27,10 @@ public class Task {
         return id;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public void setId(int id) { this.id = id; }
 
     public TaskStatus getStatus() {
@@ -38,8 +40,6 @@ public class Task {
     public void setStatus(TaskStatus taskStatus) {
         this.status = taskStatus;
     }
-
-
 
     @Override
     public boolean equals(Object o) {

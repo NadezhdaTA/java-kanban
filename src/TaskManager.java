@@ -1,8 +1,7 @@
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
-    void addTask(Task task);
+       void addTask(Task task);
 
     List<Task> getTaskList();
 
