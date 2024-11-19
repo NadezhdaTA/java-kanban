@@ -66,10 +66,12 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void historyManagerNotNull(){ assertNotNull(historyManager, "Объект класса существует."); }
+    void historyManagerNotNull() {
+        assertNotNull(historyManager, "Объект класса существует.");
+    }
 
     @Test
-    void taskManagerNotNull(){
+    void taskManagerNotNull() {
         TaskManager taskManager1 = Managers.getDefault();
 
         List<Task> list = taskManager1.getTaskList();
