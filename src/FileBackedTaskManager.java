@@ -1,9 +1,6 @@
 import java.io.*;
 import java.io.IOException;
 import java.io.FileWriter;
-import java.util.HashMap;
-import java.util.List;
-
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     static File file;

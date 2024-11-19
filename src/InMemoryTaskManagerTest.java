@@ -33,7 +33,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void TaskEqualsTaskById() {
+     void taskEqualsTaskById() {
         taskManager.addTask(task);
 
         Task task1 = new Task("Test addNewTask", TaskStatus.NEW);
@@ -44,7 +44,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void EpicEqualsEpicById() {
+     void epicEqualsEpicById() {
         taskManager.addEpic(epic);
 
         Epic epic1 = new Epic("Test addNewEpic", TaskStatus.NEW);
@@ -55,7 +55,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void SubtaskEqualsSubtaskById() {
+    void subtaskEqualsSubtaskById() {
         taskManager.addSubtask(subtask);
 
         Subtask subtask1 = new Subtask("Test addNewSubtask", TaskStatus.NEW, epic.getId());
@@ -66,9 +66,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void historyManagerNotNull(){
-        assertNotNull(historyManager, "Объект класса существует.");
-    }
+    void historyManagerNotNull(){ assertNotNull(historyManager, "Объект класса существует."); }
 
     @Test
     void taskManagerNotNull(){
@@ -112,7 +110,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void TaskShouldBetheSameInHistoryManager(){
+    void taskShouldBetheSameInHistoryManager() {
         historyManager.addHistory(task);
         historyManager.addHistory(epic);
         historyManager.addHistory(subtask);
@@ -140,10 +138,11 @@ class InMemoryTaskManagerTest {
         assertEquals(history.get(0), history1.get(0));
         assertEquals(history.get(1), history1.get(1));
         assertEquals(history.get(2), history1.get(2));
+
     }
 
     @Test
-    void TaskShouldBeAsGiven() {
+    void taskShouldBeAsGiven() {
         Task task = new Task("Test addNewTask", TaskStatus.NEW);
         task.setDescription("TaskDescription");
         taskManager.addTask(task);
