@@ -123,7 +123,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         try {
             FileReader fileReader = new FileReader(file);
             BufferedReader br = new BufferedReader(fileReader);
-            for (int i = 1; i < 2; i++){
+            for (int i = 1; i < 2; i++) {
                 br.readLine();
             }
             while (br.ready()) {
