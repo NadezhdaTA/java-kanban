@@ -10,7 +10,7 @@ class TaskTest {
     FileBackedTaskManager manager = new FileBackedTaskManager();
 
     @Test
-    public void saveTaskTest(){
+    public void saveTaskTest() {
         try {
             File file = createTempFile("test", null);
             Task task = new Task("Test addNewTask", TaskStatus.NEW);
@@ -25,7 +25,7 @@ class TaskTest {
     }
 
     @Test
-    public void saveEpicTest(){
+    public void saveEpicTest() {
         try {
             File file = createTempFile("test", null);
             Epic epic = new Epic("Test addNewEpic", TaskStatus.NEW);
@@ -43,7 +43,7 @@ class TaskTest {
     }
 
     @Test
-    public void saveSubtaskTest(){
+    public void saveSubtaskTest() {
         try {
             File file = createTempFile("test", null);
             Epic epic = new Epic("Test addNewEpic", TaskStatus.NEW);
@@ -91,7 +91,7 @@ class TaskTest {
     }
 
     @Test
-    public void saveFileTest(){
+    public void saveFileTest() {
         try {
             File file = createTempFile("test", null);
 
