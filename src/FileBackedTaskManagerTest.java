@@ -6,7 +6,7 @@ import java.io.IOException;
 import static java.io.File.createTempFile;
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskTest {
+class FileBackedTaskManagerTest {
     FileBackedTaskManager manager = new FileBackedTaskManager("test");
 
     @Test
