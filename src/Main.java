@@ -1,7 +1,7 @@
 public class Main {
 
     public static void main(String[] args) {
-        FileBackedTaskManager fileManager = new FileBackedTaskManager();
+        FileBackedTaskManager fileManager = new FileBackedTaskManager("StateFile.csv");
 
         Task task = new Task("Изучить сериализацию", TaskStatus.NEW);
         fileManager.addTask(task);
@@ -18,13 +18,23 @@ public class Main {
         Epic epic1 = new Epic("Обучение", TaskStatus.NEW);
         fileManager.addEpic(epic1);
 
+        System.out.println("Содержание файла исходного менеджера:");
+
         fileManager.printFile();
 
         System.out.println("___");
 
-        FileBackedTaskManager fileManager1 = FileBackedTaskManager.loadFromFile(FileBackedTaskManager.file);
+        FileBackedTaskManager fileManager1 = FileBackedTaskManager.loadFromFile(fileManager.getFile());
+
+        System.out.println("Содержание файла другого экземпляра менеджера:");
 
         fileManager1.printFile();
+
+        System.out.println("___");
+
+        System.out.println("Список подзадач эпика:");
+
+        System.out.println(fileManager1.getSubtasksOfEpic(epic.getId()));
 
     }
 }

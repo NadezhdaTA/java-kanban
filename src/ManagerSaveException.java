@@ -1,4 +1,4 @@
-public class ManagerSaveException extends Exception{
+public class ManagerSaveException extends RuntimeException{
     ManagerSaveException(String message) {
         super(message);
 

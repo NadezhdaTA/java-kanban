@@ -1,11 +1,12 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
     private ArrayList<Task> historyList = new ArrayList<>(10);
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return new ArrayList<>(historyList);
     }
 

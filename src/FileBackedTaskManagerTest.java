@@ -7,7 +7,7 @@ import static java.io.File.createTempFile;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TaskTest {
-    FileBackedTaskManager manager = new FileBackedTaskManager();
+    FileBackedTaskManager manager = new FileBackedTaskManager("test");
 
     @Test
     public void saveTaskTest() {
@@ -77,7 +77,7 @@ class TaskTest {
             assertNotNull(manager.getSubtasks(), "Подзадача найдена.");
             assertEquals(1, manager.getEpics().size(), "Верное количество подзадач.");
 
-            FileBackedTaskManager manager1 = FileBackedTaskManager.loadFromFile(manager.file);
+            FileBackedTaskManager manager1 = FileBackedTaskManager.loadFromFile(manager.getFile());
 
             assertNotNull(manager1.getEpics(), "Эпики найдены.");
             assertEquals(1, manager1.getEpics().size(), "Верное количество эпиков.");
@@ -101,16 +101,39 @@ class TaskTest {
 
             assertNotNull(file, "Файл существует.");
 
-            FileBackedTaskManager manager1 = FileBackedTaskManager.loadFromFile(manager.file);
+            FileBackedTaskManager manager1 = FileBackedTaskManager.loadFromFile(file);
 
             assertEquals(0, manager1.getTasks().size(), "Хеш-таблица пустая.");
             assertEquals(0, manager1.getEpics().size(), "Хеш-таблица пустая.");
             assertEquals(0, manager1.getSubtasks().size(), "Хеш-таблица пустая.");
 
-            assertNotNull(manager1.file, "Файл существует.");
+            assertNotNull(manager1.getFile(), "Файл существует.");
 
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void subtaskAndEpicShouldBeConnected() {
+        try {
+        File file = createTempFile("test", null);
+        Epic epic = new Epic("Test addNewEpic", TaskStatus.NEW);
+        manager.addEpic(epic);
+
+        Subtask subtask = new Subtask("Test addNewSubtask", TaskStatus.NEW, epic.getId());
+        manager.addSubtask(subtask);
+
+        assertNotNull(manager.getEpics(), "Эпики найдены.");
+        assertEquals(1, manager.getEpics().size(), "Верное количество эпиков.");
+
+        assertNotNull(manager.getSubtasks(), "Подзадача найдена.");
+        assertEquals(1, manager.getEpics().size(), "Верное количество подзадач.");
+
+        assertEquals(1, epic.getSubtaskIds().size(), "Эпик и подзадача связаны");
+
+        } catch (IOException e) {
+        throw new RuntimeException(e);
         }
     }
 }

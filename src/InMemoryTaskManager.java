@@ -22,9 +22,13 @@ public class InMemoryTaskManager implements TaskManager {
         return subtasks;
     }
 
-    public int getNextId() { return nextId; }
+    public int getNextId() {
+        return nextId;
+    }
 
-    public void setNextId(int nextId) { this.nextId = nextId; }
+    public void setNextId(int nextId) {
+        this.nextId = nextId;
+    }
 
     @Override
     public void addTask(Task task) {
@@ -95,29 +99,29 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public void updateEpicStatus(Epic epic) {
-        int count_NEW = 0;
-        int count_IN_PROGRESS = 0;
-        int count_DONE = 0;
+        int countNew = 0;
+        int countInProgress = 0;
+        int countDone = 0;
 
         for (Integer subtaskId : epic.getSubtaskIds()) {
             Subtask subtask = subtasks.get(subtaskId);
 
             switch (subtask.getStatus()) {
                 case NEW:
-                    count_NEW++;
+                    countNew++;
                     break;
                 case IN_PROGRESS:
-                    count_IN_PROGRESS++;
+                    countInProgress++;
                     break;
                 case DONE:
-                    count_DONE++;
+                    countDone++;
                     break;
             }
         }
 
-        if (count_NEW == epic.getSubtaskIds().size()) {
+        if (countNew == epic.getSubtaskIds().size()) {
             epic.setStatus(TaskStatus.NEW);
-        } else if (count_DONE == epic.getSubtaskIds().size()) {
+        } else if (countDone == epic.getSubtaskIds().size()) {
             epic.setStatus(TaskStatus.DONE);
         } else {
             epic.setStatus(TaskStatus.IN_PROGRESS);

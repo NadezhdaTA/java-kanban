@@ -105,7 +105,7 @@ class InMemoryTaskManagerTest {
         taskManager.addTask(task);
         historyManager.addHistory(task);
 
-        final ArrayList<Task> history = historyManager.getHistory();
+        List<Task> history = historyManager.getHistory();
 
         assertNotNull(history, "История не пустая.");
         assertEquals(1, history.size(), "История не пустая.");
@@ -117,7 +117,7 @@ class InMemoryTaskManagerTest {
         historyManager.addHistory(epic);
         historyManager.addHistory(subtask);
 
-        ArrayList<Task> history = historyManager.getHistory();
+        List<Task> history = historyManager.getHistory();
 
         assertEquals(3, history.size(), "История не пустая, содержит 3 элемента.");
 
@@ -133,7 +133,7 @@ class InMemoryTaskManagerTest {
         taskManager.updateSubtask(subtask1, subtask.getId());
         historyManager.addHistory(subtask);
 
-        ArrayList<Task> history1 = historyManager.getHistory();
+        List<Task> history1 = historyManager.getHistory();
 
         assertEquals(6, history1.size(), "История пополнилась.");
 
@@ -148,15 +148,15 @@ class InMemoryTaskManagerTest {
         Task task = new Task("Test addNewTask", TaskStatus.NEW);
         task.setDescription("TaskDescription");
         taskManager.addTask(task);
-        task.setId(9);
+        int taskId = task.getId();
 
         assertEquals(1, taskManager.getTaskList().size(), "История не пустая.");
 
-        Task task1 = taskManager.getTaskById(9);
+        Task task1 = taskManager.getTaskById(taskId);
 
         assertEquals("Test addNewTask", task1.getTitle());
         assertEquals("TaskDescription", task1.getDescription());
-        assertEquals(9, task1.getId());
+        assertEquals(taskId, task1.getId());
 
     }
 
