@@ -1,8 +1,17 @@
+package tests;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import managers.InMemoryHistoryManager;
+import managers.InMemoryTaskManager;
+import managers.Managers;
+import managers.TaskManager;
 import org.junit.jupiter.api.Test;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+import tasks.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.List;

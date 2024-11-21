@@ -1,8 +1,12 @@
+package managers;
+
+import tasks.*;
+
 import java.io.*;
 import java.io.IOException;
 import java.io.FileWriter;
 
-public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
+public class FileBackedTaskManager extends InMemoryTaskManager {
     private String fileName = "StateFile.csv";
 
     public FileBackedTaskManager(String fileName) {
@@ -15,49 +19,58 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         return file;
     }
 
+    @Override
     public void addTask(Task task) {
         super.addTask(task);
         task.setType(TaskType.TASK);
         save();
     }
 
+    @Override
     public void removeTaskById(int id) {
         super.removeTaskById(id);
         save();
     }
 
+    @Override
     public void removeAllTasks() {
         super.removeAllTasks();
         save();
     }
 
+    @Override
     public void addEpic(Epic epic) {
         super.addEpic(epic);
         epic.setType(TaskType.EPIC);
         save();
     }
 
+    @Override
     public void removeEpicById(int id) {
         super.removeEpicById(id);
         save();
     }
 
+    @Override
     public void removeAllEpics() {
         super.removeAllEpics();
         save();
     }
 
+    @Override
     public void addSubtask(Subtask subtask) {
         super.addSubtask(subtask);
         subtask.setType(TaskType.SUBTASK);
         save();
     }
 
+    @Override
     public void removeSubtaskById(int id) {
         super.removeSubtaskById(id);
         save();
     }
 
+    @Override
     public void removeAllSubtasks() {
         super.removeAllSubtasks();
         save();

@@ -1,3 +1,5 @@
+package tasks;
+
 import java.util.Objects;
 
 public class Task {
@@ -7,7 +9,7 @@ public class Task {
     private TaskStatus status;
     private TaskType type;
 
-    Task(String title, TaskStatus status) {
+    public Task(String title, TaskStatus status) {
         this.title = title;
         this.status = status;
     }
@@ -57,7 +59,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "tasks.Task{" +
                 " id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
