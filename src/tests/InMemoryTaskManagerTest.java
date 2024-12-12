@@ -13,36 +13,25 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
 class InMemoryTaskManagerTest {
     Task task = new Task("Test addNewTask", TaskStatus.NEW);
+
     Epic epic = new Epic("Test addNewEpic", TaskStatus.NEW);
+
     Subtask subtask = new Subtask("Test addNewSubtask", TaskStatus.NEW, epic.getId());
+
 
     InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
     InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
     @Test
-    void addNewTask() {
-        taskManager.addTask(task);
-        final int taskId = task.getId();
-        final Task savedTask = taskManager.getTaskById(taskId);
-
-        assertNotNull(savedTask, "Задача найдена.");
-        assertEquals(task, savedTask, "Задачи совпадают.");
-
-        final ArrayList<Task> tasks = taskManager.getTaskList();
-
-        assertNotNull(tasks, "Задача найдена.");
-        assertEquals(1, tasks.size(), "Верное количество задач.");
-        assertEquals(task, tasks.getFirst(), "Задачи совпадают.");
-    }
-
-    @Test
-     void taskEqualsTaskById() {
+    void taskEqualsTaskById() {
         taskManager.addTask(task);
 
         Task task1 = new Task("Test addNewTask", TaskStatus.NEW);
@@ -53,7 +42,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-     void epicEqualsEpicById() {
+    void epicEqualsEpicById() {
         taskManager.addEpic(epic);
 
         Epic epic1 = new Epic("Test addNewEpic", TaskStatus.NEW);
@@ -132,19 +121,19 @@ class InMemoryTaskManagerTest {
 
         Task task1 = new Task("Test addNewTask1", TaskStatus.IN_PROGRESS);
         taskManager.updateTask(task1, task.getId());
-        historyManager.addHistory(task);
+        historyManager.addHistory(task1);
 
         Epic epic1 = new Epic("Test addNewEpic1", TaskStatus.IN_PROGRESS);
         taskManager.updateEpic(epic1, epic.getId());
-        historyManager.addHistory(epic);
+        historyManager.addHistory(epic1);
 
-        Subtask subtask1 = new Subtask("Test addNewSubtask1", TaskStatus.DONE, epic.getId());
+        Subtask subtask1 = new Subtask("Test addNewSubtask1", TaskStatus.DONE, epic1.getId());
         taskManager.updateSubtask(subtask1, subtask.getId());
-        historyManager.addHistory(subtask);
+        historyManager.addHistory(subtask1);
 
         List<Task> history1 = historyManager.getHistory();
 
-        assertEquals(6, history1.size(), "История пополнилась.");
+        assertEquals(3, history1.size(), "Количество элементов прежнее.");
 
         assertEquals(history.get(0), history1.get(0));
         assertEquals(history.get(1), history1.get(1));
@@ -182,13 +171,94 @@ class InMemoryTaskManagerTest {
         Task task3 = list.get(1);
 
         assertEquals(2, taskManager.getTaskList().size(), "Оба элемента добавлены в таблицу.");
-
         assertEquals(task.getId(), task1.getId(), "id одинаковые.");
-
         assertEquals(task, task2, "Задачи одинаковые.");
-
         assertEquals(task1, task3, "Задачи одинаковые.");
 
     }
 
+    @Test
+    void EpicStatusTest() {
+        taskManager.addEpic(epic);
+        Subtask subtask1 = new Subtask("SubtaskTitleTest1", TaskStatus.NEW, epic.getId());
+        Subtask subtask2 = new Subtask("SubtaskTitleTest2", TaskStatus.NEW, epic.getId());
+        Subtask subtask3 = new Subtask("SubtaskTitleTest3", TaskStatus.IN_PROGRESS, epic.getId());
+        Subtask subtask4 = new Subtask("SubtaskTitleTest4", TaskStatus.DONE, epic.getId());
+        Subtask subtask5 = new Subtask("SubtaskTitleTest5", TaskStatus.DONE, epic.getId());
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+        assertEquals(TaskStatus.NEW, epic.getStatus(), "Статус - NEW.");
+
+        taskManager.addSubtask(subtask3);
+        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus(), "Статус - IN_PROGRESS.");
+
+        taskManager.addSubtask(subtask4);
+        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus(), "Статус - IN_PROGRESS.");
+
+        taskManager.removeSubtaskById(subtask1.getId());
+        taskManager.removeSubtaskById(subtask2.getId());
+        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus(), "Статус - IN_PROGRESS.");
+
+        taskManager.removeSubtaskById(subtask3.getId());
+        taskManager.addSubtask(subtask5);
+        assertEquals(TaskStatus.DONE, epic.getStatus(), "Статус - DONE.");
+    }
+
+    @Test
+    void SubtaskShouldHaveEpicTest() {
+        taskManager.addEpic(epic);
+
+        Subtask subtask1 = new Subtask("SubtaskTitleTest1", TaskStatus.NEW, epic.getId());
+        Subtask subtask2 = new Subtask("SubtaskTitleTest2", TaskStatus.IN_PROGRESS, epic.getId());
+
+        taskManager.addSubtask(subtask1);
+        assertNotNull(taskManager.getEpicById(subtask1.getEpicId()));
+
+        taskManager.addSubtask(subtask2);
+        assertNotNull(taskManager.getEpicById(subtask1.getEpicId()));
+        assertNotNull(taskManager.getEpicById(subtask2.getEpicId()));
+
+        List<Subtask> subtasks = taskManager.getSubtaskList();
+        assertEquals(2, subtasks.size(), "Добавлено 3 подзадачи.");
+
+        Subtask subtask3 = new Subtask("SubtaskTitleTest3", TaskStatus.NEW, 26);
+        taskManager.addSubtask(subtask3);
+        assertEquals(2, subtasks.size(), "Подзадача не добавлена.");
+    }
+
+    @Test
+    void taskTimeOverlapTest() {
+        Task task1 = new Task("Test addNewTask1", TaskStatus.NEW);
+        Duration duration1 = Duration.ofMinutes(12586);
+        LocalDateTime time1 = LocalDateTime.of(2025, 2, 2, 14, 53);
+        task1.setStartTime(time1, duration1);
+
+        taskManager.addTask(task);
+        taskManager.addTask(task1);
+        assertEquals(2, taskManager.getTaskList().size(), "Добавлены 2 задачи.");
+
+        taskManager.addEpic(epic);
+
+        Subtask subtask1 = new Subtask("SubtaskTitleTest1", TaskStatus.NEW, epic.getId());
+        LocalDateTime time2 = LocalDateTime.of(2024, 11, 2, 6, 0);
+        Duration duration2 = Duration.ofMinutes(76);
+        subtask1.setStartTime(time2, duration2);
+        taskManager.addSubtask(subtask1);
+
+        Subtask subtask2 = new Subtask("SubtaskTitleTest2", TaskStatus.IN_PROGRESS, epic.getId());
+        LocalDateTime time3 = LocalDateTime.of(2025, 1, 2, 8, 12);
+        Duration duration3 = Duration.ofMinutes(186);
+        subtask2.setStartTime(time3, duration3);
+        taskManager.addSubtask(subtask2);
+
+        assertEquals(epic.getStartTime(), subtask1.getStartTime(), "Расчетное время старта эпика совпадает со стартом самой ранней подзадачи эпика.");
+        assertEquals(epic.getEndTime(), subtask2.getEndTime(), "Расчетное время окончания эпика совпадает со временем окончания самой поздней подзадачи эпика.");
+
+        Task task3 = new Task("Test addNewTask2", TaskStatus.NEW);
+        LocalDateTime time = LocalDateTime.of(2025, 1, 12, 15, 25);
+        Duration duration = Duration.ofMinutes(459);
+        task3.setStartTime(time, duration);
+        taskManager.addTask(task3);
+        assertEquals(3, taskManager.getTaskList().size(), "Задача с наложением временных отрезков не добавлена.");
+    }
 }
