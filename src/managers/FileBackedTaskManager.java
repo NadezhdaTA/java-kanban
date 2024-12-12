@@ -8,12 +8,20 @@ import java.io.FileWriter;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+
 import static java.lang.Integer.parseInt;
 import static tasks.TaskType.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private File file;
 
+
+import static java.lang.Integer.parseInt;
+import static tasks.TaskType.*;
+
+
+public class FileBackedTaskManager extends InMemoryTaskManager {
+    private final File file;
     public FileBackedTaskManager(String fileName) {
         file = new File(fileName);
     }
@@ -25,7 +33,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void addTask(Task task) {
         super.addTask(task);
-        task.setType(TaskType.TASK);
+        task.setType(TASK);
         save();
     }
 
@@ -216,4 +224,3 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return toString;
     }
 }
-

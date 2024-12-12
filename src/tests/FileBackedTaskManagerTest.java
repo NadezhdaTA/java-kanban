@@ -12,7 +12,7 @@ import java.io.File;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTaskManagerTest {
-    FileBackedTaskManager manager = new FileBackedTaskManager("test");
+    FileBackedTaskManager manager = new FileBackedTaskManager("test.csv");
 
     @Test
     public void saveTaskTest() {
