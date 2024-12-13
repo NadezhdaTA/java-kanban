@@ -330,8 +330,10 @@ public class InMemoryTaskManager implements TaskManager {
             for (Task task1 : prioritizedTasks) {
                 if (task.getStartTime().isAfter(task1.getStartTime()) && task.getStartTime().isBefore(task1.getEndTime())) {
                     validation = true;
+                    break;
                 } else if (task1.getStartTime().isAfter(task.getStartTime()) && task1.getStartTime().isBefore(task.getEndTime())) {
                     validation = true;
+                    break;
                 }
             }
         }
