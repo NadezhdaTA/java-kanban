@@ -1,14 +1,11 @@
 package tasks;
 
-import managers.InMemoryTaskManager;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
     private final ArrayList<Integer> subtaskIds = new ArrayList<>();
     private LocalDateTime endTime;
-    InMemoryTaskManager memory = new InMemoryTaskManager();
 
     public Epic(String title, TaskStatus taskStatus) {
         super(title, taskStatus);

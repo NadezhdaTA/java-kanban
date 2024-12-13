@@ -26,12 +26,13 @@ class InMemoryTaskManagerTest {
 
     Subtask subtask = new Subtask("Test addNewSubtask", TaskStatus.NEW, epic.getId());
 
-
-    InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
     InMemoryTaskManager taskManager = new InMemoryTaskManager();
+    InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
+
+
 
     @Test
-     void taskEqualsTaskById() {
+    void taskEqualsTaskById() {
         taskManager.addTask(task);
 
         Task task1 = new Task("Test addNewTask", TaskStatus.NEW);
@@ -42,7 +43,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-     void epicEqualsEpicById() {
+    void epicEqualsEpicById() {
         taskManager.addEpic(epic);
 
         Epic epic1 = new Epic("Test addNewEpic", TaskStatus.NEW);
@@ -261,6 +262,5 @@ class InMemoryTaskManagerTest {
         taskManager.addTask(task3);
         assertEquals(3, taskManager.getTaskList().size(), "Задача с наложением временных отрезков не добавлена.");
     }
-
 
 }

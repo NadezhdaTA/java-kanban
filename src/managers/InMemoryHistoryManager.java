@@ -23,9 +23,9 @@ public class InMemoryHistoryManager implements HistoryManager {
                 }
             }
         }
-            if (historyList.size() == 10) {
-                historyList.removeFirst();
-            }
-            historyList.add(task);
+        if (historyList.size() == 10) {
+            historyList.removeFirst();
         }
+        historyList.add(task);
+    }
 }

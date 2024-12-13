@@ -9,11 +9,10 @@ import tasks.TaskStatus;
 
 import java.io.File;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTaskManagerTest {
-    FileBackedTaskManager manager = new FileBackedTaskManager("test.csv");
+    FileBackedTaskManager manager = new FileBackedTaskManager("test");
 
     @Test
     public void saveTaskTest() {
@@ -128,4 +127,5 @@ class FileBackedTaskManagerTest {
         Exception exception = assertThrows(RuntimeException.class, () -> {manager.loadFromFile(file);});
         manager.getFile().setWritable(true);
     }
+
 }

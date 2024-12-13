@@ -26,6 +26,10 @@ public class Task {
         }
     }
 
+
+    public void setTitle(String title) { this.title = title; }
+
+
     public Duration getDuration() { return duration; }
 
     public void setDuration(Duration duration) { this.duration = duration; }

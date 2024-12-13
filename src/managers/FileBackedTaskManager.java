@@ -13,6 +13,7 @@ import static tasks.TaskType.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
+
     public FileBackedTaskManager(String fileName) {
         file = new File(fileName);
     }
@@ -24,7 +25,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void addTask(Task task) {
         super.addTask(task);
-        task.setType(TASK);
+        task.setType(TaskType.TASK);
         save();
     }
 
@@ -215,3 +216,4 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return toString;
     }
 }
+
