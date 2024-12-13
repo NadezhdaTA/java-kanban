@@ -261,4 +261,5 @@ class InMemoryTaskManagerTest {
         taskManager.addTask(task3);
         assertEquals(3, taskManager.getTaskList().size(), "Задача с наложением временных отрезков не добавлена.");
     }
+
 }

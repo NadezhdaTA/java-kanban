@@ -249,4 +249,5 @@ public class TaskManagerTest <T extends TaskManager> {
         assertNotNull(history, "История просмотров не пустая.");
         assertEquals(3, history.size(), "В историю просмотров добавлены просмотренные задачи.");
     }
+
 }

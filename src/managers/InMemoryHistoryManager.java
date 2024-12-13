@@ -28,4 +28,5 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         historyList.add(task);
     }
+
 }
