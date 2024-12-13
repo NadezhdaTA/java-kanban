@@ -32,6 +32,9 @@ class InMemoryTaskManagerTest {
 
     @Test
     void taskEqualsTaskById() {
+
+     void taskEqualsTaskById() {
+
         taskManager.addTask(task);
 
         Task task1 = new Task("Test addNewTask", TaskStatus.NEW);

@@ -14,20 +14,26 @@ public class Main {
         FileBackedTaskManager fileManager = new FileBackedTaskManager("StateFile.csv");
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
+
         Task task = new Task("Изучить сериализацию", TaskStatus.NEW);
         LocalDateTime time = LocalDateTime.of(2025, 1, 12, 15, 25);
         Duration duration = Duration.ofMinutes(459);
         task.setStartTime(time, duration);
         fileManager.addTask(task);
 
+
+
         Epic epic = new Epic("Сдать ТЗ 7 спринта", TaskStatus.NEW);
         fileManager.addEpic(epic);
+
 
         Task task2 = new Task("Купить наушники", TaskStatus.NEW);
         Duration duration1 = Duration.ofMinutes(12586);
         LocalDateTime time1 = LocalDateTime.of(2025, 2, 2, 14, 53);
         task2.setStartTime(time1, duration1);
         fileManager.addTask(task2);
+
+
 
         Subtask subtask = new Subtask("Выбрать цвет", TaskStatus.NEW, epic.getId());
         LocalDateTime time2 = LocalDateTime.of(2024, 11, 2, 6, 0);
@@ -93,6 +99,15 @@ public class Main {
         System.out.println("-------------------------------");
         System.out.println("Список приоритетных задач:");
         System.out.println(fileManager.getPrioritizedTasks());
+
+
+        System.out.println(fileManager.getEpicList());
+        System.out.println(fileManager.getTaskList());
+        System.out.println(fileManager.getSubtaskList());
+        System.out.println("-------------------------------");
+        System.out.println("Список приоритетных задач:");
+        System.out.println(fileManager.getPrioritizedTasks());
+
 
     }
 }

@@ -127,5 +127,4 @@ class FileBackedTaskManagerTest {
         Exception exception = assertThrows(RuntimeException.class, () -> {manager.loadFromFile(file);});
         manager.getFile().setWritable(true);
     }
-
 }

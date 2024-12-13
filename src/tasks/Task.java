@@ -13,7 +13,6 @@ public class Task {
     protected Duration duration;
     protected LocalDateTime startTime;
 
-
     public Task(String title, TaskStatus status) {
         this.title = title;
         this.status = status;
@@ -27,7 +26,9 @@ public class Task {
         }
     }
 
+
     public void setTitle(String title) { this.title = title; }
+
 
     public Duration getDuration() { return duration; }
 
