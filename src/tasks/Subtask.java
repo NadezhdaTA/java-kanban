@@ -28,5 +28,4 @@ public class Subtask extends Task {
                 ", duration=" + duration + '\'' +
                 '}';
     }
-
 }

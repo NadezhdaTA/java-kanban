@@ -12,7 +12,7 @@ import static java.lang.Integer.parseInt;
 import static tasks.TaskType.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private File file;
+    private final File file;
 
     public FileBackedTaskManager(String fileName) {
         file = new File(fileName);

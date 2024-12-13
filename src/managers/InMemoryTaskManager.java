@@ -11,9 +11,6 @@ import java.util.*;
 
 import java.util.stream.Collectors;
 
-import java.util.stream.*;
-
-
 public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
@@ -21,7 +18,6 @@ public class InMemoryTaskManager implements TaskManager {
     private int nextId = 1;
 
     private final HistoryManager memory = Managers.getDefaultHistory();
-
 
     public HashMap<Integer, Task> getTasks() {return tasks;}
 
@@ -32,17 +28,6 @@ public class InMemoryTaskManager implements TaskManager {
     public int getNextId() {return nextId;}
 
     public void setNextId(int nextId) {this.nextId = nextId;}
-
-    public HashMap<Integer, Task> getTasks() { return tasks; }
-
-    public HashMap<Integer, Epic> getEpics() { return epics; }
-
-    public HashMap<Integer, Subtask> getSubtasks() { return subtasks; }
-
-    public int getNextId() { return nextId; }
-
-    public void setNextId(int nextId) { this.nextId = nextId; }
-
 
     @Override
     public void addTask(Task task) {
@@ -98,11 +83,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-
     public ArrayList<Epic> getEpicList() {return new ArrayList<>(epics.values());}
-
-    public ArrayList<Epic> getEpicList() { return new ArrayList<>(epics.values()); }
-
 
     public ArrayList<Subtask> getSubtasksOfEpic(int epicId) {
         Epic epic = epics.get(epicId);
@@ -174,21 +155,12 @@ public class InMemoryTaskManager implements TaskManager {
         LocalDateTime startTime = epic.getStartTime();
         for (Integer subtaskId : epic.getSubtaskIds()) {
             Subtask subtask = getSubtaskById(subtaskId);
-
             if (subtask != null) {
                 if (subtask.getStartTime() != null) {
                     if (startTime == null) {
                         epic.setStartTime(subtask.getStartTime(), subtask.getDuration());
                     } else {
                         if (subtask.getStartTime().isBefore(startTime))
-
-            if(subtask != null){
-                if (subtask.getStartTime() != null) {
-                    if(startTime == null) {
-                        epic.setStartTime(subtask.getStartTime(), subtask.getDuration());
-                    } else {
-                        if(subtask.getStartTime().isBefore(startTime))
-
                             epic.setStartTime(subtask.getStartTime(), subtask.getDuration());
                     }
                 }
@@ -255,11 +227,7 @@ public class InMemoryTaskManager implements TaskManager {
             subtask.setId(nextId++);
             subtasks.put(subtask.getId(), subtask);
             ArrayList<Integer> subtaskIds = epic.getSubtaskIds();
-
             if (!subtaskIds.contains(subtask.getId())) {
-
-            if(!subtaskIds.contains(subtask.getId())) {
-
                 epic.setSubtaskId(subtask.getId());
             }
             updateEpicStatus(epic);
@@ -272,11 +240,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public ArrayList<Subtask> getSubtaskList() {
         return new ArrayList<>(subtasks.values());
-
     }
-
-        }
-
 
     @Override
     public void updateSubtask(Subtask subtask, int subtaskId) {
@@ -334,11 +298,7 @@ public class InMemoryTaskManager implements TaskManager {
     static class StartTimeComparator implements Comparator<Task> {
         @Override
         public int compare(Task task1, Task task2) {
-
             if (task1.getStartTime().isBefore(task2.getStartTime())) {
-
-            if(task1.getStartTime().isBefore(task2.getStartTime())){
-
                 return -1;
             } else if (task1.getStartTime().isAfter(task2.getStartTime())) {
                 return 1;
@@ -363,11 +323,7 @@ public class InMemoryTaskManager implements TaskManager {
         return tasksPriority;
     }
 
-
     public boolean taskTimeOverlap(Task task) {
-
-    public boolean taskTimeOverlap(Task task){
-
         boolean validation = false;
         TreeSet<Task> prioritizedTasks = getPrioritizedTasks();
         if (!prioritizedTasks.isEmpty()) {

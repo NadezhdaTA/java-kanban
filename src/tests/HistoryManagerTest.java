@@ -84,6 +84,5 @@ public class HistoryManagerTest {
         assertTrue(historyManager.getHistory().contains(subtask2), "Последняя задача добавлена.");
         assertFalse(historyManager.getHistory().contains(task), "Первая задача удалена.");
     }
-
 }
 
