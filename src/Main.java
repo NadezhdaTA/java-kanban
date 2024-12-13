@@ -12,8 +12,6 @@ public class Main {
 
     public static void main(String[] args) {
         FileBackedTaskManager fileManager = new FileBackedTaskManager("StateFile.csv");
-        InMemoryTaskManager taskManager = new InMemoryTaskManager();
-
 
         Task task = new Task("Изучить сериализацию", TaskStatus.NEW);
         LocalDateTime time = LocalDateTime.of(2025, 1, 12, 15, 25);
@@ -21,19 +19,14 @@ public class Main {
         task.setStartTime(time, duration);
         fileManager.addTask(task);
 
-
-
         Epic epic = new Epic("Сдать ТЗ 7 спринта", TaskStatus.NEW);
         fileManager.addEpic(epic);
-
 
         Task task2 = new Task("Купить наушники", TaskStatus.NEW);
         Duration duration1 = Duration.ofMinutes(12586);
         LocalDateTime time1 = LocalDateTime.of(2025, 2, 2, 14, 53);
         task2.setStartTime(time1, duration1);
         fileManager.addTask(task2);
-
-
 
         Subtask subtask = new Subtask("Выбрать цвет", TaskStatus.NEW, epic.getId());
         LocalDateTime time2 = LocalDateTime.of(2024, 11, 2, 6, 0);
@@ -50,11 +43,11 @@ public class Main {
         Epic epic1 = new Epic("Обучение", TaskStatus.NEW);
         fileManager.addEpic(epic1);
 
-        Subtask subtask2 = new Subtask("Выбрать еще один цвет", TaskStatus.NEW, epic.getId());
-        LocalDateTime time4 = LocalDateTime.of(2025, 1, 2, 8, 12);
+        Subtask subtask2 = new Subtask("Тестовая задача", TaskStatus.NEW, epic.getId());
+        LocalDateTime time4 = LocalDateTime.of(2025, 1, 2, 9, 20);
         Duration duration4 = Duration.ofMinutes(186);
-        subtask1.setStartTime(time3, duration3);
-        fileManager.addSubtask(subtask1);
+        subtask2.setStartTime(time4, duration4);
+        fileManager.addSubtask(subtask2);
 
         System.out.println("Содержание файла исходного менеджера:");
 
@@ -68,13 +61,6 @@ public class Main {
 
         System.out.println("-------------------------------");
         System.out.println("Списки по папкам:");
-
-        Subtask subtask6 = new Subtask("Вкрутить лампочку", TaskStatus.NEW, 10);
-        taskManager.addSubtask(subtask6);
-
-        Epic epic3 = new Epic("Вкрутить лампочку", TaskStatus.NEW);
-        epic3.setId(subtask6.getId());
-        taskManager.addEpic(epic3);
 
         System.out.println("Задачи:");
         System.out.println(fileManager.getTaskList());
@@ -93,21 +79,14 @@ public class Main {
         System.out.println("История:");
         System.out.println(fileManager.getHistory());
 
-        System.out.println(fileManager.getEpicList());
-        System.out.println(fileManager.getTaskList());
-        System.out.println(fileManager.getSubtaskList());
         System.out.println("-------------------------------");
         System.out.println("Список приоритетных задач:");
         System.out.println(fileManager.getPrioritizedTasks());
 
-
-        System.out.println(fileManager.getEpicList());
-        System.out.println(fileManager.getTaskList());
-        System.out.println(fileManager.getSubtaskList());
+        fileManager.removeEpicById(2);
         System.out.println("-------------------------------");
         System.out.println("Список приоритетных задач:");
         System.out.println(fileManager.getPrioritizedTasks());
-
 
     }
 }

@@ -9,7 +9,6 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskStatus;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HistoryManagerTest {

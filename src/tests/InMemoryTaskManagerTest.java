@@ -26,9 +26,10 @@ class InMemoryTaskManagerTest {
 
     Subtask subtask = new Subtask("Test addNewSubtask", TaskStatus.NEW, epic.getId());
 
-
-    InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
     InMemoryTaskManager taskManager = new InMemoryTaskManager();
+    InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
+
+
 
     @Test
     void taskEqualsTaskById() {
